@@ -1,4 +1,4 @@
-import * as firebase from 'firebase/app'
+import firebase from 'firebase/app'
 
 // import 'firebase/firestore'
 // import 'firebase/auth'
@@ -6,7 +6,7 @@ import * as firebase from 'firebase/app'
 
 type Config = Parameters<typeof firebase.initializeApp>[0]
 
-export class Fuego {
+export class FireSWR {
   public db: ReturnType<firebase.app.App['firestore']>
   public auth: typeof firebase.auth
   public functions: typeof firebase.functions

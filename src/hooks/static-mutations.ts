@@ -1,6 +1,6 @@
 import { mutate } from 'swr'
 import { SetOptions } from '@firebase/firestore-types'
-import { fuego } from '../context'
+import { fireSWR } from '../context'
 import { empty } from '../helpers/empty'
 import { collectionCache } from '../classes/Cache'
 import { Document } from '../types/Document'
@@ -48,8 +48,8 @@ const set = <Data extends object = {}, Doc extends Document = Document<Data>>(
 
   if (!isDocument)
     throw new Error(
-      `[@nandorojo/swr-firestore] error: called set() function with path: ${path}. This is not a valid document path. 
-      
+      `[@nandorojo/swr-firestore] error: called set() function with path: ${path}. This is not a valid document path.
+
 data: ${JSON.stringify(data)}`
     )
 
@@ -92,8 +92,12 @@ data: ${JSON.stringify(data)}`
       false
     )
   })
-
-  return fuego.db.doc(path).set(data, options)
+  if (!options) {
+    console.warn("[@nandorojo/swr-firestore] error: set() function cannot reference undefined options variable");
+  } else {
+    return fireSWR.db.doc(path).set(data, options)
+  }
+  return null;
 }
 
 const update = <
@@ -118,8 +122,8 @@ const update = <
 
   if (!isDocument)
     throw new Error(
-      `[@nandorojo/swr-firestore] error: called update function with path: ${path}. This is not a valid document path. 
-      
+      `[@nandorojo/swr-firestore] error: called update function with path: ${path}. This is not a valid document path.
+
 data: ${JSON.stringify(data)}`
     )
 
@@ -158,7 +162,7 @@ data: ${JSON.stringify(data)}`
       false
     )
   })
-  return fuego.db.doc(path).update(data)
+  return fireSWR.db.doc(path).update(data)
 }
 
 const deleteDocument = <
@@ -217,7 +221,7 @@ const deleteDocument = <
     })
   }
 
-  return fuego.db.doc(path).delete()
+  return fireSWR.db.doc(path).delete()
 }
 
 export { set, update, revalidateDocument, revalidateCollection, deleteDocument }
